@@ -30,13 +30,10 @@ O.engines = [
                         Ig2_Facet_Polyhedra_PolyhedraGeom()
                 ],
                 [# collision "physics"
-                        Ip2_PolyhedraMat_PolyhedraMat_PolyhedraPhys(),
-                        Ip2_FrictMat_PolyhedraMat_FrictPhys(),
-                        Ip2_FrictMat_FrictMat_FrictPhys()
+                        Ip2_PolyhedraMat_PolyhedraMat_PolyhedraPhys()
                 ],
                 [# contact law -- apply forces
-                        Law2_PolyhedraGeom_PolyhedraPhys_Volumetric(),
-                        Law2_ScGeom_FrictPhys_CundallStrack()
+                        Law2_PolyhedraGeom_PolyhedraPhys_Volumetric()
                 ]
         ),
         # GravityEngine(gravity=(0,0,-9.81)),
