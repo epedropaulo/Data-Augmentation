@@ -1,4 +1,13 @@
-from yade import polyhedra_utils
+from yade import polyhedra_utils, qt, export
+
+# Define a function to stop the simulation after 400 iterations and record the VTK file
+def Stop():
+        if O.iter >= 350:
+                O.pause()
+                
+                # Export the polyhedral data using VTKExporter
+                vtkExporter = export.VTKExporter('polyhedra_output_')
+                vtkExporter.exportPolyhedra()
 
 gravel = PolyhedraMat()
 gravel.density = 2600  #kg/m^3
@@ -13,10 +22,6 @@ polyhedra_utils.fillBox(
         (0, 0, 0), (0.3, 0.3, 0.3), gravel, seed=4,
         sizemin=[0.025, 0.025, 0.025], sizemax=[0.05, 0.05, 0.05]
 )
-
-def checkUnbalanced():
-	if unbalancedForce() < .05:
-		O.pause()
 
 O.engines = [
         ForceResetter(),
@@ -39,8 +44,15 @@ O.engines = [
         # GravityEngine(gravity=(0,0,-9.81)),
         NewtonIntegrator(damping=0.3, gravity=(0, 0, -9.81)),
 
+        # save data for Paraview
+        #VTKRecorder(fileName='3d-vtk-', recorders=['all'], firstIterRun=300, iterLast=400, ascii=False),
+
         # Will run the checkUnbalanced every 5 real seconds
-        PyRunner(command='checkUnbalanced()', realPeriod=5, label='checker')
+        PyRunner(command='Stop()', realPeriod=5, label='checker')
 ]
 
+# Set the timestep
 O.dt=0.0025
+
+# Open the 3D view
+view = qt.View()
