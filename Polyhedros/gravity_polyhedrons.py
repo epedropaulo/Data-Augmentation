@@ -10,17 +10,36 @@ def Stop():
                 vtkExporter.exportPolyhedra()
 
 gravel = PolyhedraMat()
-gravel.density = 2600  #kg/m^3
-gravel.young = 1E7  #Pa
-gravel.poisson = 0.3#20000 / 1E7
-gravel.frictionAngle = pi/4  #rad
+gravel.density = 2600           # kg/m^ 3
+gravel.young = 1E7              # Pa
+gravel.poisson = 0.3            # 20000 / 1E7
+gravel.frictionAngle = pi/4     # rad
 
-box = geom.facetBox((0.15, 0.15, 0.15), (0.15, 0.15, 0.15), wallMask=31, material=gravel)
+"""box = geom.facetBox(
+        center=(0.15, 0.15, 0.15),
+        extents=(0.15, 0.15, 0.15),
+        wallMask=31,
+        material=gravel
+        )
+"""
+height=0.4
+box = geom.facetParallelepiped(
+        center=(0.15, 0.15, 0.15),
+        extents=(0.15, 0.15, height),
+        height=height,
+        wallMask=31, 
+        material=gravel
+        )
+
 O.bodies.append(box)
 
 polyhedra_utils.fillBox(
-        (0, 0, 0), (0.3, 0.3, 0.3), gravel, seed=4,
-        sizemin=[0.025, 0.025, 0.025], sizemax=[0.05, 0.05, 0.05]
+        mincoord=(0, 0, -0.2),
+        maxcoord=(0.3, 0.3, 0.55),
+        material=gravel,
+        seed=4,
+        sizemin=[0.025, 0.025, 0.025],
+        sizemax=[0.05, 0.05, 0.05]
 )
 
 O.engines = [
