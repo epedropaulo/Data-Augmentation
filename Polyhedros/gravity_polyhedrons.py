@@ -22,24 +22,29 @@ gravel.frictionAngle = pi/4     # rad
         material=gravel
         )
 """
-height=0.4
+size: float = 0.25 # represents half of the side 
+height: float = size
+
+center_parallelepiped: tuple = (size, size, size)       # represents the exactly center of the parallelepiped
+extents: float = (size, size, height)     # half lengths of the parallelepiped sides
+
 box = geom.facetParallelepiped(
-        center=(0.15, 0.15, 0.15),
-        extents=(0.15, 0.15, height),
+        center=center_parallelepiped,
+        extents=extents,
         height=height,
-        wallMask=31, 
+        wallMask=31,
         material=gravel
-        )
+)
 
 O.bodies.append(box)
 
 polyhedra_utils.fillBox(
-        mincoord=(0, 0, -0.2),
-        maxcoord=(0.3, 0.3, 0.55),
+        mincoord=(0, 0, 0),
+        maxcoord=(2 * size, 2 * size, 2 * height),
         material=gravel,
         seed=4,
         sizemin=[0.025, 0.025, 0.025],
-        sizemax=[0.05, 0.05, 0.05]
+        sizemax=[0.05,  0.05,  0.05]
 )
 
 O.engines = [
