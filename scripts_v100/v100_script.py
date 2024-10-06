@@ -2,7 +2,7 @@ from yade import polyhedra_utils, export , qt
 import time  
 
 # Number of simulations to run
-number_of_simulations = 1  
+number_of_simulations = 3  
 
 # Set up the material and geometry
 gravel = PolyhedraMat()
@@ -21,7 +21,7 @@ current_simulation_number = 0
 
 # Function to stop the simulation after a specific number of iterations and record the VTK file
 def Stop():
-    if O.iter >= 2500:
+    if O.iter >= 700:
         # Export the polyhedral data using VTKExporter with a specified folder and unique file name
         vtkExporter = export.VTKExporter(f'simulation_{current_simulation_number}_output')  # Set the path here
         vtkExporter.exportPolyhedra()
@@ -34,14 +34,14 @@ def run_simulation(simulation_number):
     global current_simulation_number
     current_simulation_number = simulation_number
 
-    height = 0.2
-    half_lenght_box = 0.2
+    half_lenght_box = 0.1
+    height = half_lenght_box * 5
 
     box = geom.facetParallelepiped(
         center=(
             half_lenght_box, 
             half_lenght_box,
-            half_lenght_box
+            height
         ),
         extents=(
             half_lenght_box,
@@ -57,14 +57,14 @@ def run_simulation(simulation_number):
 
     polyhedra_utils.fillBox(
         material=gravel,
-        seed=simulation_number + 1,
+        seed=1,
         mincoord=(0, 0, 0),
         maxcoord=(
             2*half_lenght_box,
             2*half_lenght_box,
             2*height
         ),
-        sizemin=[
+        sizemin=[   # lengths of the bounding box
             0.025,
             0.025,
             0.025
@@ -105,8 +105,8 @@ def run_simulation(simulation_number):
     O.dt = 0.0015
 
     # Run the simulation and wait for it to finish
-    qt.View()
-    #O.run(wait=True)
+    #qt.View()
+    O.run(wait=True)
 
 # Main loop to run multiple simulations
 total_start_time = time.time()  # Record the start time of all simulations

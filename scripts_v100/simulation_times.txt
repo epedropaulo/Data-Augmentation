@@ -1,0 +1,3 @@
+Simulation Times Report
+=======================
+Simulation 0 took 235.69 seconds.

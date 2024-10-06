@@ -3,9 +3,9 @@ from yade import polyhedra_utils, export, qt
 def Stop():
     if O.iter >= 2500:
         # Export the polyhedral data using VTKExporter with a specified folder and unique file name
-        vtkExporter = export.VTKExporter(f'simulation_{current_simulation_number}_output')  # Set the path here
+        vtkExporter = export.VTKExporter(f'simulation_output')  # Set the path here
         vtkExporter.exportPolyhedra()
-        print(f"Simulation {current_simulation_number} completed and saved.")
+        print(f"Simulation completed and saved.")
         
         O.pause()
 
@@ -16,14 +16,14 @@ gravel.young = 1E7  # Pa
 gravel.poisson = 0.3  # 20000 / 1E7
 gravel.frictionAngle = pi / 4  # rad
 
-height = 0.2
-half_lenght_box = 0.2
+half_lenght_box = 0.1
+height = half_lenght_box * 5
 
 box = geom.facetParallelepiped(
     center=(
         half_lenght_box, 
         half_lenght_box,
-        half_lenght_box
+        height
     ),
     extents=(
         half_lenght_box,
@@ -46,7 +46,7 @@ polyhedra_utils.fillBox(
         2*half_lenght_box,
         2*height
     ),
-    sizemin=[
+    sizemin=[   # lengths of the bounding box
         0.025,
         0.025,
         0.025
