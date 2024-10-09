@@ -1,5 +1,6 @@
-from yade import polyhedra_utils, export , qt
-import time  
+from yade import polyhedra_utils, export, qt
+import time
+import csv  # Import the CSV module
 
 # Number of simulations to run
 number_of_simulations = 3  
@@ -16,14 +17,21 @@ with open("simulation_times.txt", "w") as file:
     file.write("Simulation Times Report\n")
     file.write("=======================\n")
 
+# Open a CSV file to save the simulation data
+with open("simulation_data.csv", "w", newline='') as csvfile:
+    csvwriter = csv.writer(csvfile)
+    # Write the header for the CSV
+    csvwriter.writerow(["Simulation Number", "Box Length", "Simulation Time (seconds)"])
+
 # Variable to keep track of the current simulation number
 current_simulation_number = 0
+half_lenght_box = 0
 
 # Function to stop the simulation after a specific number of iterations and record the VTK file
 def Stop():
     if O.iter >= 700:
         # Export the polyhedral data using VTKExporter with a specified folder and unique file name
-        vtkExporter = export.VTKExporter(f'simulation_{current_simulation_number}_output')  # Set the path here
+        vtkExporter = export.VTKExporter(f'simulation_{current_simulation_number}_{half_lenght_box}_')  # Set the path here
         vtkExporter.exportPolyhedra()
         print(f"Simulation {current_simulation_number} completed and saved.")
         
@@ -34,8 +42,9 @@ def run_simulation(simulation_number):
     global current_simulation_number
     current_simulation_number = simulation_number
 
-    half_lenght_box = 0.1
-    height = half_lenght_box * 5
+    global half_lenght_box
+    half_lenght_box = 0.04 * (current_simulation_number + 1)
+    height = half_lenght_box * 3  # ideal = * 5
 
     box = geom.facetParallelepiped(
         center=(
@@ -105,11 +114,11 @@ def run_simulation(simulation_number):
     O.dt = 0.0015
 
     # Run the simulation and wait for it to finish
-    #qt.View()
     O.run(wait=True)
 
 # Main loop to run multiple simulations
 total_start_time = time.time()  # Record the start time of all simulations
+
 for i in range(number_of_simulations):
     print(f"Starting simulation {i}...")
     simulation_start_time = time.time()  # Record the start time of the current simulation
@@ -120,9 +129,14 @@ for i in range(number_of_simulations):
     simulation_time = simulation_end_time - simulation_start_time  # Calculate the duration
     print(f"Simulation {i} took {simulation_time:.2f} seconds.")
     
-    # Save the simulation time to the file
+    # Save the simulation time to the text file
     with open("simulation_times.txt", "a") as file:
-        file.write(f"Simulation {i} took {simulation_time:.2f} seconds.\n")
+        file.write(f"Simulation {i} with length {half_lenght_box} took {simulation_time:.2f} seconds.\n")
+    
+    # Save the simulation time and box length to the CSV file
+    with open("simulation_data.csv", "a", newline='') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow([i, half_lenght_box, simulation_time])
     
     O.reset()  # Reset the simulation environment for the next run
 
@@ -131,6 +145,6 @@ total_end_time = time.time()
 total_time = total_end_time - total_start_time
 print(f"All simulations took {total_time:.2f} seconds in total.")
 
-# Save the total time to the file
+# Save the total time to the text file
 with open("simulation_times.txt", "a") as file:
     file.write(f"\nAll simulations took {total_time:.2f} seconds in total.\n")

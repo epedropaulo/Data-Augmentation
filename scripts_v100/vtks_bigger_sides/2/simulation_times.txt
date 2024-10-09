@@ -1,0 +1,7 @@
+Simulation Times Report
+=======================
+Simulation 0 with length 0.04 took 5.07 seconds.
+Simulation 1 with length 0.08 took 36.36 seconds.
+Simulation 2 with length 0.12 took 169.69 seconds.
+
+All simulations took 211.13 seconds in total.
